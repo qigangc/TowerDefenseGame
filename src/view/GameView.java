@@ -513,7 +513,7 @@ public class GameView extends Application implements Observer {
 				Dragboard db = canvas.startDragAndDrop(TransferMode.ANY);
 				x = (int) event.getY() / 32;
 				y = (int) event.getX() / 32;
-				if (map.getGrid()[x][y].getContent() instanceof Tower) {
+				if (x >= 0 && y >= 0 && x < map.getGrid().length && y < map.getGrid()[0].length && map.getGrid()[x][y].getContent() instanceof Tower) {
 					selectedTile = map.getGrid()[x][y];
 					String image = ((LocatedImage) ((Tower) selectedTile.getContent()).getImage().getImage()).getURL();
 					Image dragImage = new Image(image , 29, 59, true, true);
@@ -550,7 +550,8 @@ public class GameView extends Application implements Observer {
 				if (!isShopping) {
 					newY = (int) event.getX() / 32;
 					newX = (int) event.getY() / 32;
-					if (!(x==newX && y==newY) && selectedTile != null && map.getGrid()[newX][newY].getContent().getType() == TileType.EMPTY) {
+					if (newX >= 0 && newY >= 0 && newX < map.getGrid().length && newY < map.getGrid()[0].length
+							&& !(x==newX && y==newY) && selectedTile != null && map.getGrid()[newX][newY].getContent().getType() == TileType.EMPTY) {
 						Tile tile = map.getGrid()[newX][newY];
 						Tower tower = (Tower) selectedTile.getContent();
 						tower.setTile(tile);							
@@ -580,8 +581,11 @@ public class GameView extends Application implements Observer {
 								&& map.getGrid()[x][y].getContent().getType() == TileType.EMPTY) {
 							Tile tile = map.getGrid()[x][y];
 							tower.setTile(tile);
-							tile.setContent(player.buyTower(tower));
-							drawTower();
+							Tower purchasedTower = player.buyTower(tower);
+							if (purchasedTower != null) {
+								tile.setContent(purchasedTower);
+								drawTower();
+							}
 						}
 					}
 				
@@ -610,7 +614,7 @@ public class GameView extends Application implements Observer {
 			towerCount.setText(Integer.toString(player.getTowers().size()));
 			scoreCount.setText(Integer.toString(player.getScore()));
 			enemyCount.setText(Integer.toString(player.getMap().getAliveEnemies().size()));
-			healthBar.setProgress(player.getHealth() / maxHealth);
+			healthBar.setProgress(Math.max(0, player.getHealth() / maxHealth));
 		
 		//else change the map
 		} else if (o instanceof GameMap) {
@@ -667,25 +671,24 @@ public class GameView extends Application implements Observer {
 
 				spawnCount = 0;
 				waveNum++;
+				isWaveInProgress = true;
+				map.setEnemies(new LinkedList<Enemy>());
 
-				//timer and timer task for the game loop
-				Timer t = new Timer();
+				final Timer t = new Timer();
 				TimerTask tt = new TimerTask(){
-					
-					/**
-					 * for each cycle of the timertask, run one iteration of the game loop
-					 */
 					@Override
 					public void run() {
-						doGameLoop(this,t);
+						final TimerTask task = this;
+						Platform.runLater(new Runnable() {
+							@Override
+							public void run() {
+								doGameLoop(task, t);
+							}
+						});
 					}
 				};
 
-				t.scheduleAtFixedRate(tt, 0, 250); //runs at 250ms per tick, but emulated to be 500ms unless fast mode
-
-				isWaveInProgress = false;
-				map.setEnemies(new LinkedList<Enemy>());
-				t.purge();
+				t.scheduleAtFixedRate(tt, 0, 250);
 			}
 		}
 	}
@@ -711,14 +714,6 @@ public class GameView extends Application implements Observer {
 			return;
 		}
 		
-		// win message
-		if (waveNum >= 4 && player.getHealth() > 0){
-			gc.setStroke(Color.LAWNGREEN);
-			gc.strokeText("YOU SURVIVED ALL ROUNDS!", 185, 260);
-			gc.strokeText("YOU WIN!", 185, 280);
-			return;
-		}
-
 		//skip every other iteration of the game loop, currently running at 250ms
 		//to emulate a 500ms game loop for normal speed mode. if fastMode == true,
 		//loop runs at 250ms
@@ -744,11 +739,17 @@ public class GameView extends Application implements Observer {
 
 		
 		//if all alive enemies are gone, end the wave
-		if (map.getAliveEnemies().size() <= 0){
+		if (map.getAliveEnemies().size() <= 0 && spawnCount > waveNum){
 			tt.cancel();
 			timer.cancel();
 			timer.purge();
 			isWaveInProgress = false;
+			if (waveNum >= 4 && player.getHealth() > 0){
+				gc.setStroke(Color.LAWNGREEN);
+				gc.strokeText("YOU SURVIVED ALL ROUNDS!", 185, 260);
+				gc.strokeText("YOU WIN!", 185, 280);
+			}
+			return;
 		}
 
 		//for every tower on the map

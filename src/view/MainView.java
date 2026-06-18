@@ -20,7 +20,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import java.io.File;
 
 /**
  * the starting view containing the option to view the rules, load the game, start a new one on the three given difficulties.
@@ -105,7 +104,7 @@ public class MainView extends Application{
     loadButton.setOnAction(buttonListener);
     
     // change sound here
-	Media sound = new Media(new File("bin/sound/hauntedhouse.wav").toURI().toString());
+	Media sound = new Media(getClass().getResource("/sound/hauntedhouse.wav").toExternalForm());
 	MediaPlayer mediaPlayer = new MediaPlayer(sound);
 	mediaPlayer.play();	
 	

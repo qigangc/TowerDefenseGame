@@ -316,7 +316,7 @@ public class SaverLoader {
 								grid[i][j].setContent(t);
 							}
 							else{
-								t = new TowerC(loadMap);
+								t = towers.get(q);
 								grid[i][j].setContent(new Tile_Empty());
 								grid[i][j].setContent(t);
 							}
@@ -401,6 +401,7 @@ public class SaverLoader {
 		loadEnemy.setSpeed(speed);
 		loadEnemy.setHealth(health);
 		loadEnemy.setArmor(armor);
+		loadEnemy.setPos(xPos, yPos);
 		String status = br.readLine();
 		if (status.compareToIgnoreCase("SLOWDOWN") == 0)
 			loadEnemy.setStatus(EnemyStatus.SLOWDOWN);

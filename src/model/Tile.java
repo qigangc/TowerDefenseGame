@@ -42,10 +42,8 @@ public class Tile extends Observable{
 	 */
 	public void setContent(TileContent content) {
 		this.content = content;
-		if (content == null){
-			System.out.println("Not enough gold");
+		if (content == null)
 			return;
-		}
 		content.setTile(this);
 		setChanged();
 	    notifyObservers();

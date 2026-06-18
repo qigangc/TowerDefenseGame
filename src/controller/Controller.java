@@ -21,7 +21,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import java.io.File;
 
 /**
  * the controller handles all clicking, GUI controlling, etc. Also contains the game loop, which handles tower attacks, moving enemies, etc.
@@ -106,7 +105,7 @@ public class Controller extends Application{
     loadButton.setOnAction(buttonListener);
     
     // change sound here
-	Media sound = new Media(new File("bin/sound/hauntedhouse.wav").toURI().toString());
+	Media sound = new Media(getClass().getResource("/sound/hauntedhouse.wav").toExternalForm());
 	MediaPlayer mediaPlayer = new MediaPlayer(sound);
 	mediaPlayer.play();	
 	
@@ -155,6 +154,7 @@ public class Controller extends Application{
 				try {
 					GameMap map = SaverLoader.loadFile();
 					map.setEnemyPath1(SaverLoader.returnEnemyPath());
+					map.setLoadMap(true);
 					Player player = map.getPlayer();
 					gameView = new GameView(player);
 					gameView.start(new Stage());			
