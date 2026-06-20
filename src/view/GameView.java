@@ -15,6 +15,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -656,7 +657,7 @@ public class GameView extends Application implements Observer {
 				try {
 					SaverLoader.saveFile(map);
 				} catch (IOException e1) {
-					e1.printStackTrace();
+					new Alert(Alert.AlertType.ERROR, "Unable to save game.").showAndWait();
 				}
 			} else if (command.equals("Upgrade")) {
 				if (upgrade == null || upgrade.isEmpty())
@@ -759,8 +760,6 @@ public class GameView extends Application implements Observer {
 			if (deadEnemy != null){
 				//add the score, the gold and set the enemy to dead
 				int score = deadEnemy.getArmor()+deadEnemy.getOriginalHealth()+1;
-				System.out.println("Tower "+ t.getTowerType().toString() + " has killed " + deadEnemy.toString()
-				+ " for "+ score + " points and " + deadEnemy.giveGold() + " gold");
 				player.adjustScore(score);
 				player.adjustGold(deadEnemy.giveGold());
 				deadEnemy.setStatus(EnemyStatus.DIED);
@@ -775,7 +774,6 @@ public class GameView extends Application implements Observer {
 			//if the player is dead, end the game
 			if (player.getHealth() <= 0) {
 				if (player.getHealth() <= 0){
-					System.out.println("You lose!");
 					gameOver = true;
 					//youLost();
 				}
@@ -788,9 +786,7 @@ public class GameView extends Application implements Observer {
 			if (enemy.hasEscaped()) {
 				//if it just escaped, handle it accordingly
 				player.loseHealth(enemy.getHealth());
-				System.out.printf(enemy.toString() + " with " + enemy.getHealth() + " health!\n");
 				if (player.getHealth() <= 0){
-					System.out.println("You lose!");
 					gameOver = true;
 				}
 				//map.removeEnemy(enemy);
@@ -806,14 +802,12 @@ public class GameView extends Application implements Observer {
 					//if the poison killed it
 					if (enemy.getHealth() <= 0){
 						enemy.setStatus(EnemyStatus.DIED);
-						System.out.println(enemy.toString() + "has died to poison!");
 						player.adjustScore(enemy.getArmor()+enemy.getOriginalHealth()+1);
 						player.adjustGold(enemy.giveGold());
 					}
 				}
 				if (enemy.hasEscaped()){
 					player.loseHealth(enemy.getHealth());
-					System.out.printf(enemy.toString() + " with " + enemy.getHealth() + " health!\n");
 					enemy.setStatus(EnemyStatus.ESCAPED);
 				}
 			}
@@ -829,17 +823,12 @@ public class GameView extends Application implements Observer {
 	 */
 	private int aliveEnemyCount(){
 		int retval = 0;
-		try{
-			for (Enemy e : map.getEnemies()){
-				EnemyStatus s = e.getStatus();
-				if (s == EnemyStatus.DIED || s == EnemyStatus.ESCAPED)
-					continue;
-				else
-					retval++;
-			}
-		}
-		catch (Exception e){
-			e.printStackTrace();
+		for (Enemy e : map.getEnemies()){
+			EnemyStatus s = e.getStatus();
+			if (s == EnemyStatus.DIED || s == EnemyStatus.ESCAPED)
+				continue;
+			else
+				retval++;
 		}
 		return retval;
 	}

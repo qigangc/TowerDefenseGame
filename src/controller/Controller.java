@@ -2,5 +2,8 @@ package controller;
 
 import view.MainView;
 
-public class Controller extends MainView {
+public class Controller {
+	public static void main(String[] args) {
+		MainView.main(args);
+	}
 }

@@ -146,9 +146,8 @@ public class Player extends Observable {
    * @return true if upgrade successful, else false
    */
   public boolean upgradeTower(Tower tower, boolean range, boolean damage, boolean speed) {
-	  if (tower.getVersion() >= 3){
-		  System.out.println("Tower already maxed out!");
-	  }
+	  if (tower.getVersion() >= 3)
+		  return false;
 	  if (range || damage || speed) {
 		  try {
 			  adjustGold(-tower.getUpgradePrice());

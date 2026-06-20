@@ -242,8 +242,6 @@ public abstract class Tower extends TileContent {
 					  enemy.setStatus(EnemyStatus.FREEZE);
 				  else
 					  enemy.setStatus(EnemyStatus.SLOWDOWN);
-				  System.out.println("Tower "+ this.type + " attacked " + enemy.toString()
-					  		+ " Enemy now has " + enemy.getHealth() +" health.");
 				  if (numAttacks > 1)
 					  break;
 			}
