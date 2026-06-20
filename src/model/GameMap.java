@@ -1,6 +1,5 @@
 package model;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
@@ -46,7 +45,6 @@ public abstract class GameMap extends Observable {
 	 * @return true/false whether wave is running
 	 */
 	public boolean isWaveInProgress(){
-		System.out.println("waveInProgress: "+waveInProgress); //DEBUGGING
 		return waveInProgress;
 	}
 	

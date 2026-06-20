@@ -1,8 +1,6 @@
 package model;
 
 import java.util.LinkedList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * an extension of GameMap. this is the hard map for our game. generates

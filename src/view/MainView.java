@@ -4,6 +4,7 @@ import javafx.scene.image.ImageView;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
@@ -150,7 +151,6 @@ public class MainView extends Application{
 			}
 			
 			if (text.equals("Load Game")){
-				//TODO: Still bug here.
 				try {
 					GameMap map = SaverLoader.loadFile();
 					map.setEnemyPath1(SaverLoader.returnEnemyPath());
@@ -160,8 +160,7 @@ public class MainView extends Application{
 					gameView.start(new Stage());			
 					stage.close();
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					new Alert(Alert.AlertType.ERROR, "Unable to load save file.").showAndWait();
 				}
 				return;
 			}

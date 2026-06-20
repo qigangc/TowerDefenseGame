@@ -1,8 +1,6 @@
 package model;
 
 import java.util.LinkedList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * an extension of GameMap. this is the easy map for our game. spawns one
@@ -21,15 +19,8 @@ public class Map_Easy extends GameMap {
 	public Map_Easy() {
 		super(rows, cols, "easy");
 		setUp();
-		if(super.getLoadMap()){
-			try {
-				System.out.println("#" + SaverLoader.returnEnemyPath().toString());
-				this.setEnemyPath(SaverLoader.returnEnemyPath());
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		if(super.getLoadMap())
+			this.setEnemyPath(SaverLoader.returnEnemyPath());
 	}
 
 	/*
@@ -140,12 +131,7 @@ public class Map_Easy extends GameMap {
 	public void spawn() {
 		
 		if(super.getLoadMap()){
-			try {
-				this.setEnemyPath(SaverLoader.returnEnemyPath());
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			this.setEnemyPath(SaverLoader.returnEnemyPath());
 			super.setLoadMap(false);
 			super.setChanged();
 			super.notifyObservers();

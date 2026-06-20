@@ -1,8 +1,6 @@
 package model;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -450,7 +448,7 @@ public class SaverLoader {
 	 * @return enemy path
 	 * @throws Exception
 	 */
-	public static LinkedList<String> returnEnemyPath() throws Exception{
+	public static LinkedList<String> returnEnemyPath(){
 		return enemyPath;
 	}
 	
